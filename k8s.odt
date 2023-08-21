@@ -1,0 +1,88 @@
+K8S – é um gerenciador de containers
+
+borg(Google) é pai do K8S
+
+Ele é disponibilizado através de um conjunto de APIs
+
+Normalmente é acessado usando cli = kubectl
+
+tudo é baseado em estado. Configura o estado de cada objeto
+
+Cluster – conjunto de máquinas
+
+No k8s tem um cluester que é chamado de k8s master – ele é quem controla todos os outros nós
+	apiserver
+	controller-manager
+	scheduler
+outros nodes
+	kubelet
+	kubeproxy
+
+Um cluster é um conjunto de máquinas e cada máquina é um nó
+
+Dentro de um nó tem um pod
+pod:     unidade que contém os containers provisionados
+	representa os processos rodando no cluster
+	pod roda um container (normalmente só 1)
+deployment – um objeto do k8s que tem por objetivo provisionar os pods
+	para provisionar ele tem que saber quantas replicas
+	
+	replicaSets – quantas replicas tem de cada serviço
+
+
+_______________________________________________________________________
+kind é para aprendizado
+kind cria o clusteer mas precisa do kubectl para gerenciar ele
+
+CRIAR UM CLUSTER COM KIND
+	kind create cluster
+LISTAR TODOS OS CLUSTERS COM KIND
+	kind get clusters
+DELETAR UM CLUSTER
+	 kind delete clusters [nome do cluster]
+
+PARA CONECTAR NO CLUSTER
+	kubectl cluster-info --context kind-kind
+
+ARQUIVO DE CONFIG ONDE FICA O CONTEXT DOS CLUSTERS
+	~/.KUBE/CONFIG
+
+PARA TRAZER TODOS OS ONDES DO MEU KUBECTL
+	kubectl get nodes
+
+DEPOIS DE CRIAR O ARQUIVO .YAML RODAR ESSE CMD
+	kind create cluster –config=./ [ARQUIVO YAML CRIADO] .yaml –name=fullcycle
+
+PEGAR O NOME DOS CLUSTERS CONFIGURADOS
+	kubectl config get-clusters
+
+MUDAR O CONTEXT QUE O KUBECTL VAI TRABALHAR (DEPOIS DISSO O GET NODES VAI OBTER DESSE CONTEXT)
+	kubectl config use-context kind-fullcycle
+
+DEPOIS DE CRIAR O ARQUIVO YAML DO POD, RODE O COMANDO PARA APLICAR
+	kubectl apply -f k8s/pod.yaml
+da forma que foi feito ainda não temos a porta exposta, uma maneira de expor pode ser o seguinte
+
+port-forward pod/nodeserver {porta do pc}:{porta do pod}
+
+DELETAR O POD DO CONTEXT 
+	kubectl delete pod {nome do pod}
+
+REPLICASET – gerencia os pods para a gente
+
+A especificação de um pod é o template do replicaset
+
+kubectl get replicaset 
+kubectl apply -f k8s/replicaset.yaml
+
+VER CONFIGS DO POD CRIADO 
+	kubectl describe pod [nome do pod]
+
+VOLTAR PARA A VERSÃO ANTERIOR
+    kubectl rollout undo deployment {nome do deployment} -> Voltar para última versão
+    kubectl rollout undo deployment {nome do deployment} --to-revision={numero da versão a voltar}
+
+VER HISTÓRICO DO DEPLOYMENT
+    rollout history deployment nodeserver
+
+Deployment → replicaset → pods
