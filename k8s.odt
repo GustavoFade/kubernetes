@@ -86,3 +86,18 @@ VER HISTÓRICO DO DEPLOYMENT
     rollout history deployment nodeserver
 
 Deployment → replicaset → pods
+
+https://octopus.com/blog/difference-clusterip-nodeport-loadbalancer-kubernetes
+SERIVE
+	porta de entrada para a aplicação
+	service consegue atuar como um load balance
+
+	ClusterIP = SÓ PARA QUEM ESTÁ INTENRO DO CLUSTER - quem tiver dentro do k8s e chamar pelo ip/node do service vai conseguir comunicar com os deployment
+				para testar dá para usar o port-forward pq nesse momento não estamos dentro do cluster, então não conseugimos bater lá
+				bater na porta -> service (redireciona para o pod) -> pod
+
+				dá para mudar o redirecionamento como se fosse o ocelot -> bate na 80 e redireciona para outra porta no container
+				targetPort -> porta do meu container
+
+	NodePort =	Possivel ser acessado de fora do cluster
+				gera uma porta e libera a mesma para todos os nodes (default range port: 30000-32767)
